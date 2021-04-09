@@ -2,7 +2,7 @@
     <div :class="wrapClasses" :style="styles">
         <div :class="classes">
             <div :class="[prefixCls + '-title']" v-if="showSlotHeader" ref="title"><slot name="header"></slot></div>
-            <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" @mousewheel="handleMouseWheel">
+            <div :class="[prefixCls + '-header', headBorder ? `${prefixCls}-border` : '']" v-if="showHeader" ref="header" @mousewheel="handleMouseWheel">
                 <table-head
                     :prefix-cls="prefixCls"
                     :styleObject="tableHeaderStyle"
@@ -94,6 +94,7 @@
             <div :class="[prefixCls + '-fixed-right-header']" :style="fixedRightHeaderStyle" v-if="isRightFixed"></div>
             <div :class="[prefixCls + '-footer']" v-if="showSlotFooter" ref="footer"><slot name="footer"></slot></div>
         </div>
+        <div class="ivu-table-resize-line" v-show="showResizeLine" ref="resizeLine"></div>
         <Spin fix size="large" v-if="loading">
             <slot name="loading"></slot>
         </Spin>
@@ -208,11 +209,17 @@
             rowKey: {
                 type: Boolean,
                 default: false
+            },
+            // extra
+            headBorder: {
+                type: Boolean,
+                default: false
             }
         },
         data () {
             const colsWithId = this.makeColumnsId(this.columns);
             return {
+                showResizeLine: false,
                 ready: false,
                 tableWidth: 0,
                 columnsWidth: {},
